@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { post } from "../services/Endpoint";
 import toast from "react-hot-toast";
+import { techStackOptions } from "../constants";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -44,7 +45,6 @@ export default function Register() {
   //   }));
   // };
 
-
   const handleTechStackChange = (e) => {
     const value = e.target.value.toLowerCase();
     setFormData((prevData) => ({
@@ -54,7 +54,6 @@ export default function Register() {
         : [...prevData.skills, value], // add if not selected
     }));
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -75,7 +74,9 @@ export default function Register() {
       navigate("/login");
     } catch (error) {
       console.error("Registration error:", error);
-      toast.error("Account already Exist with this Email. Failed to register. Please try again.");
+      toast.error(
+        "Account already Exist with this Email. Failed to register. Please try again."
+      );
     }
   };
 
@@ -162,29 +163,11 @@ export default function Register() {
                   onChange={handleTechStackChange}
                   value={formData.skills}
                 >
-                  <option value="C">C</option>
-                  <option value="C++">C++</option>
-                  <option value="Java">Java</option>
-                  <option value="Python">Python</option>
-                  <option value="JavaScript">JavaScript</option>
-                  <option value="HTML">HTML</option>
-                  <option value="CSS">CSS</option>
-                  <option value="React">React</option>
-                  <option value="Express">Express</option>
-                  <option value="Node">Node</option>
-                  <option value="Angular">Angular</option>
-                  <option value="Keras">Keras</option>
-                  <option value="Pytorch">Pytorch</option>
-                  {/* <option value="UI/UX">UI/UX</option>
-                  <option value="Machine Learning">Machine Learning</option>
-                  <option value="Full-Stack Web Development">
-                    Full-Stack Web Development
-                  </option>
-                  <option value="App Development">App Development</option>
-                  <option value="Game Development">Game Development</option>
-                  <option value="Spring Boot">Spring Boot</option>
-                  <option value="Django">Django</option>
-                  <option value="Cloud Computing">Cloud Computing</option> */}
+                  {techStackOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 

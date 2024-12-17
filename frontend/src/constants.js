@@ -1,0 +1,17 @@
+export const techStackOptions = [
+  { value: "C", label: "C" },
+  { value: "C++", label: "C++" },
+  { value: "Java", label: "Java" },
+  { value: "Python", label: "Python" },
+  { value: "JavaScript", label: "JavaScript" },
+  { value: "HTML", label: "HTML" },
+  { value: "CSS", label: "CSS" },
+  { value: "React", label: "React" },
+  { value: "Express", label: "Express" },
+  { value: "Node", label: "Node" },
+  { value: "Angular", label: "Angular" },
+  { value: "Keras", label: "Keras" },
+  { value: "Pytorch", label: "Pytorch" },
+  { value: "Vue.js", label: "Vue.js" },
+  { value: "Django", label: "Django" },
+];
