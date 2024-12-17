@@ -5,6 +5,7 @@ import Select from "react-select"; // Import react-select for multichoice fields
 import { BaseUrl, post } from "../services/Endpoint";
 import { removeUser } from "../redux/AuthSlice";
 import toast from "react-hot-toast";
+import { techStackOptions } from "../constants";
 
 const yearOptions = [
   { value: "First Year", label: "First Year" },
@@ -33,23 +34,7 @@ const statusOptions = [
   { value: "Not Available", label: "Not Available" },
 ];
 
-const skillsOptions = [
-  { value: "C++", label: "C++" },
-  { value: "C", label: "C" },
-  { value: "Java", label: "Java" },
-  { value: "Python", label: "Python" },
-  { value: "Javascript", label: "Javascript" },
-  { value: "HTML", label: "HTML" },
-  { value: "CSS", label: "CSS" },
-  { value: "React", label: "React" },
-  { value: "Express", label: "Express" },
-  { value: "Node", label: "Node" },
-  { value: "Angular", label: "Angular" },
-  { value: "Tensorflow", label: "Tensorflow" },
-  { value: "Keras", label: "Keras" },
-  { value: "Pytorch", label: "Pytorch" },
-  // Add more skills as needed
-];
+const skillsOptions = techStackOptions;
 
 export default function Navbar() {
   const navigate = useNavigate();
