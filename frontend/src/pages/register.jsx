@@ -20,9 +20,13 @@ export default function Register() {
     whatsapp: "",
   });
   const [profile, setProfile] = useState(null);
+  const [error,setError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if(name == 'password'){
+      validatPassword(value);
+    }
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -32,6 +36,18 @@ export default function Register() {
   const handleFileChange = (e) => {
     setProfile(e.target.files[0]);
   };
+
+  const validatPassword = (value) =>{
+    const regexPatterns = [
+      /[A-Z]/,        // Uppercase letter
+      /[a-z]/,        // Lowercase letter
+      /\d/,           // Number
+      /[^\w\s]/       // Special character
+    ];
+    const isValid = regexPatterns.every(regex => regex.test(value)) && value.length >= 6;
+    setError(!isValid);
+  
+  }
 
   // const handleTechStackChange = (e) => {
   //   const selectedOptions = Array.from(e.target.selectedOptions).map(
@@ -319,6 +335,7 @@ export default function Register() {
                   onChange={handleChange}
                   required
                 />
+                {error && <p style={{color:'red'}}>"Password must be at least 6 characters long and include one uppercase letter, one lowercase letter, one digit, and one special character."</p>}
               </div>
 
               <div className="mb-3">
