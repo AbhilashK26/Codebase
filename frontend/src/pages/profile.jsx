@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { FaUser, FaLock, FaCamera } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { BaseUrl, patch } from "../services/Endpoint";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { setUser } from "../redux/AuthSlice";
 
 export default function Profile() {
-  const { userId } = useParams(); // Assuming you're passing the post ID in the route
+  const { userId } = useParams(); // Assuming you're passing the user ID in the route
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Added useNavigate for redirecting
 
   const [profileImage, setProfileImage] = useState(null);
   const [name, setName] = useState("");
@@ -20,7 +21,8 @@ export default function Profile() {
     if (user) {
       setName(user.FullName);
     }
-  }, []);
+  }, [user]);
+
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
   };
@@ -35,10 +37,10 @@ export default function Profile() {
       formData.append("profile", profileImage);
     }
     try {
-      const resposne = await patch(`auth/profile/${userId}`, formData);
-      const data = resposne.data;
+      const response = await patch(`auth/profile/${userId}`, formData);
+      const data = response.data;
       console.log(data);
-      if (resposne.status == 200) {
+      if (response.status === 200) {
         toast.success(data.message);
         dispatch(setUser(data.user));
       }
@@ -49,12 +51,15 @@ export default function Profile() {
         error.response.data &&
         error.response.data.message
       ) {
-        // setError(error.response.data.message); // Set error message from server response
         toast.error(error.response.data.message);
       } else {
         toast.error("An unexpected error occurred. Please try again.");
       }
     }
+  };
+
+  const handleEditClick = () => {
+    navigate("/"); // Redirect to the '/' route
   };
 
   return (
@@ -71,7 +76,6 @@ export default function Profile() {
               />
             ) : (
               <div className="profile-placeholder">
-                {/* <FaUser className="profile-icon" /> */}
                 <img
                   src={`${BaseUrl}/images/${user.profile}`}
                   alt="Avatar"
@@ -127,6 +131,10 @@ export default function Profile() {
           Update Profile
         </button>
       </form>
+      <button className="edit-button" onClick={handleEditClick}>
+        Edit
+      </button>
     </div>
   );
 }
+
