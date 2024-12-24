@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { BaseUrl, get } from "../services/Endpoint";
 
 export default function User() {
   const { userId } = useParams();
   const [singleUser, setSingleUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSingleUser = async () => {
@@ -19,6 +20,10 @@ export default function User() {
     };
     fetchSingleUser();
   }, [userId]);
+
+  const handleBackClick = () => {
+    navigate("/"); // Redirect to the home route
+  };
 
   return (
     <div className="container text-white mt-5 mb-5">
@@ -100,6 +105,9 @@ export default function User() {
                 </tr>
               </tbody>
             </table>
+            <button onClick={handleBackClick} className="btn btn-primary mt-3">
+              Back to Home
+            </button>
           </div>
         </div>
       ) : (
@@ -108,3 +116,4 @@ export default function User() {
     </div>
   );
 }
+
