@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { useParams } from "react-router-dom";
 import { BaseUrl, get } from "../services/Endpoint";
 import { useNavigate } from "react-router-dom"; // 1. Imports Updated
@@ -7,13 +8,26 @@ export default function User() {
   const { userId } = useParams();
   const [singleUser, setSingleUser] = useState(null);
   const navigate = useNavigate(); // 2. Navigation Hook
+=======
+import { useParams, useNavigate } from "react-router-dom";
+import { BaseUrl, get } from "../services/Endpoint";
+
+export default function User() {
+  const { userId } = useParams();
+  const navigate = useNavigate(); // Hook for navigation
+  const [singleUser, setSingleUser] = useState(null);
+>>>>>>> 63049aced4376feb19deeed79e24ef207ff39fdb
 
   useEffect(() => {
     const fetchSingleUser = async () => {
       try {
+<<<<<<< HEAD
         console.log(userId);
         const response = await get(`/public/Singleuser/${userId}`);
         console.log(response.data.user);
+=======
+        const response = await get(`/public/Singleuser/${userId}`);
+>>>>>>> 63049aced4376feb19deeed79e24ef207ff39fdb
         setSingleUser(response.data.user);
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -22,9 +36,16 @@ export default function User() {
     fetchSingleUser();
   }, [userId]);
 
+<<<<<<< HEAD
   const handleEdit = () => {
     navigate("/"); // Redirects to the root route
   }; // 3. Edit Button and Handler
+=======
+  // Function to handle Edit Profile button click
+  const handleEditProfile = () => {
+    navigate("/"); // Redirect to home route
+  };
+>>>>>>> 63049aced4376feb19deeed79e24ef207ff39fdb
 
   return (
     <div className="container text-white mt-5 mb-5">
@@ -40,6 +61,7 @@ export default function User() {
             />
             <h2 className="text-white">{singleUser.FullName}</h2>
             <p className="text-muted">{singleUser.role.toUpperCase()}</p>
+<<<<<<< HEAD
 
             {/* Edit Profile Button */}
             <button
@@ -51,6 +73,17 @@ export default function User() {
             </button>
           </div>
 
+=======
+            {/* Edit Profile Button */}
+            <button
+              onClick={handleEditProfile}
+              className="btn btn-primary mt-3"
+            >
+              Edit Profile
+            </button>
+          </div>
+
+>>>>>>> 63049aced4376feb19deeed79e24ef207ff39fdb
           {/* Detailed User Information */}
           <div className="col-md-8">
             <h4 className="text-white">User Details</h4>
@@ -123,4 +156,3 @@ export default function User() {
     </div>
   );
 }
-
