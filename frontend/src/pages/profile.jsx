@@ -1,140 +1,121 @@
 import React, { useEffect, useState } from "react";
-import { FaUser, FaLock, FaCamera } from "react-icons/fa";
-import { useDispatch, useSelector } from "react-redux";
-import { BaseUrl, patch } from "../services/Endpoint";
-import { useNavigate, useParams } from "react-router-dom";
-import toast from "react-hot-toast";
-import { setUser } from "../redux/AuthSlice";
+import { useParams, useNavigate } from "react-router-dom";
+import { BaseUrl, get } from "../services/Endpoint";
 
-export default function Profile() {
-  const { userId } = useParams(); // Assuming you're passing the user ID in the route
-  const dispatch = useDispatch();
-  const navigate = useNavigate(); // Added useNavigate for redirecting
-
-  const [profileImage, setProfileImage] = useState(null);
-  const [name, setName] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const user = useSelector((state) => state.auth.user);
+export default function User() {
+  const { userId } = useParams();
+  const navigate = useNavigate(); // Hook for navigation
+  const [singleUser, setSingleUser] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      setName(user.FullName);
-    }
-  }, [user]);
-
-  const handleImageChange = (e) => {
-    setProfileImage(e.target.files[0]);
-  };
-
-  const handleUpdateProfile = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("FullName", name);
-    formData.append("oldpassword", oldPassword);
-    formData.append("newpassword", newPassword);
-    if (profileImage) {
-      formData.append("profile", profileImage);
-    }
-    try {
-      const response = await patch(`auth/profile/${userId}`, formData);
-      const data = response.data;
-      console.log(data);
-      if (response.status === 200) {
-        toast.success(data.message);
-        dispatch(setUser(data.user));
+    const fetchSingleUser = async () => {
+      try {
+        const response = await get(`/public/Singleuser/${userId}`);
+        setSingleUser(response.data.user);
+      } catch (error) {
+        console.error("Error fetching user:", error);
       }
-    } catch (error) {
-      console.log(error);
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.message
-      ) {
-        toast.error(error.response.data.message);
-      } else {
-        toast.error("An unexpected error occurred. Please try again.");
-      }
-    }
-  };
+    };
+    fetchSingleUser();
+  }, [userId]);
 
-  const handleEditClick = () => {
-    navigate("/"); // Redirect to the '/' route
+  // Function to handle Edit Profile button click
+  const handleEditProfile = () => {
+    navigate("/"); // Redirect to home route
   };
 
   return (
-    <div className="profile-container">
-      <h1 className="profile-title">Update Profile</h1>
-      <form className="profile-form" onSubmit={handleUpdateProfile}>
-        <div className="profile-image-section">
-          <label htmlFor="profileImage" className="profile-image-label">
-            {profileImage ? (
-              <img
-                src={URL.createObjectURL(profileImage)}
-                alt="Avatar"
-                className="profile-image"
-              />
-            ) : (
-              <div className="profile-placeholder">
-                <img
-                  src={`${BaseUrl}/images/${user.profile}`}
-                  alt="Avatar"
-                  className="profile-image"
-                />
-              </div>
-            )}
-            <FaCamera className="profile-camera-icon" />
-          </label>
-          <input
-            type="file"
-            id="profileImage"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="profile-image-input"
-          />
-        </div>
+    <div className="container text-white mt-5 mb-5">
+      {singleUser ? (
+        <div className="row">
+          {/* Profile Image and Basic Info */}
+          <div className="col-md-4 text-center">
+            <img
+              src={`${BaseUrl}/images/${singleUser.profile}`}
+              alt={`${singleUser.FullName}'s Profile`}
+              className="img-fluid rounded-circle mb-3"
+              style={{ width: "200px", height: "200px", objectFit: "cover" }}
+            />
+            <h2 className="text-white">{singleUser.FullName}</h2>
+            <p className="text-muted">{singleUser.role.toUpperCase()}</p>
+            {/* Edit Profile Button */}
+            <button
+              onClick={handleEditProfile}
+              className="btn btn-primary mt-3"
+            >
+              Edit Profile
+            </button>
+          </div>
 
-        <div className="input-group">
-          <FaUser className="input-icon" />
-          <input
-            type="text"
-            placeholder="Update Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="profile-input"
-          />
+          {/* Detailed User Information */}
+          <div className="col-md-8">
+            <h4 className="text-white">User Details</h4>
+            <table className="table table-dark table-striped">
+              <tbody>
+                <tr>
+                  <th>Email</th>
+                  <td>{singleUser.email}</td>
+                </tr>
+                <tr>
+                  <th>Department</th>
+                  <td>{singleUser.dept}</td>
+                </tr>
+                <tr>
+                  <th>Year</th>
+                  <td>{singleUser.year}</td>
+                </tr>
+                <tr>
+                  <th>Gender</th>
+                  <td>{singleUser.gender}</td>
+                </tr>
+                <tr>
+                  <th>Status</th>
+                  <td>{singleUser.status}</td>
+                </tr>
+                <tr>
+                  <th>CGPA</th>
+                  <td>{singleUser.CGPA}</td>
+                </tr>
+                <tr>
+                  <th>Primary Language</th>
+                  <td>{singleUser.primary_lang}</td>
+                </tr>
+                <tr>
+                  <th>Phone</th>
+                  <td>{singleUser.phone}</td>
+                </tr>
+                <tr>
+                  <th>WhatsApp</th>
+                  <td>{singleUser.whatsapp}</td>
+                </tr>
+                <tr>
+                  <th>Resume Link</th>
+                  <td>
+                    {singleUser.resume_link ? (
+                      <a
+                        href={singleUser.resume_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary"
+                      >
+                        View Resume
+                      </a>
+                    ) : (
+                      "Not Available"
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <th>Skills</th>
+                  <td>{singleUser.skills.join(", ")}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-
-        <div className="input-group">
-          <FaLock className="input-icon" />
-          <input
-            type="password"
-            placeholder="Old Password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            className="profile-input"
-          />
-        </div>
-
-        <div className="input-group">
-          <FaLock className="input-icon" />
-          <input
-            type="password"
-            placeholder="New Password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="profile-input"
-          />
-        </div>
-
-        <button type="submit" className="profile-button">
-          Update Profile
-        </button>
-      </form>
-      <button className="edit-button" onClick={handleEditClick}>
-        Edit
-      </button>
+      ) : (
+        <p className="text-center text-muted">Loading user details...</p>
+      )}
     </div>
   );
 }
-

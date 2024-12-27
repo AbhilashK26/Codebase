@@ -106,7 +106,7 @@ export default function User() {
               </tbody>
             </table>
             <button onClick={handleBackClick} className="btn btn-primary mt-3">
-              Back to Home
+              Edit Profile
             </button>
           </div>
         </div>
